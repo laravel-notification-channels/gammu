@@ -56,13 +56,14 @@ class GammuChannel
     public function send($notifiable, Notification $notification)
     {
         $payload = $notification->toGammu($notifiable);
+        $param = $payload->toArray();
         $this->gammuExceptions($payload, $notifiable);
         switch (config('services.gammu.method')) {
             case 'api':
-                $this->gammuApi($payload);
+                $this->gammuApi($param);
                 break;
             case 'db':
-                $this->gammuDb($payload);
+                $this->gammuDb($param, $payload);
                 break;
         }
     }
@@ -70,12 +71,11 @@ class GammuChannel
     /**
      * Send the given notification via Gammu Api.
      *
-     * @param mixed $payload
+     * @param array $param
      */
-    public function gammuApi($payload)
+    public function gammuApi(array $param)
     {
-        $param = $payload->toArray();
-        $this->http->post(config('services.gammu.url') . '/send/sms', [
+        $this->http->post(config('services.gammu.url'), [
             'json' => [
                 'key' => config('services.gammu.auth'),
                 'to' => $param['DestinationNumber'],
@@ -87,13 +87,12 @@ class GammuChannel
     /**
      * Send the given notification via Gammu DB.
      *
-     * @param mixed $payload
+     * @param array $param
+     * @param GammuMessage $payload
      */
-    public function gammuDb($payload)
+    public function gammuDb(array $param, GammuMessage $payload)
     {
-        $params = $payload->toArray();
-
-        $outbox = $this->outbox->create($params);
+        $outbox = $this->outbox->create($param);
 
         $multiparts = $payload->getMultipartChunks();
         if (! empty($multiparts) && ! empty($outbox->ID)) {
@@ -104,7 +103,7 @@ class GammuChannel
         }
     }
 
-    public function gammuExceptions($payload, $notifiable)
+    public function gammuExceptions(GammuMessage $payload, $notifiable)
     {
         $method = config('services.gammu.method');
 
