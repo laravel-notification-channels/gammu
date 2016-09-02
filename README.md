@@ -174,6 +174,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 ## Credits
 
 - [Muhammad Zamroni](https://github.com/matriphe)
+- [Kristian Drucker](https://github.com/kristiandrucker)
 - [All Contributors](../../contributors)
 
 ## License

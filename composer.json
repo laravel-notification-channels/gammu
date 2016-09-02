@@ -9,6 +9,12 @@
             "email": "halo@matriphe.com",
             "homepage": "https://matriphe.com",
             "role": "Developer"
+        },
+        {
+            "name": "Kristian Drucker",
+            "email": "kristian@rolmi.sk",
+            "homepage": "https://github.com/kristiandrucker",
+            "role": "Developer"
         }
     ],
     "require": {
