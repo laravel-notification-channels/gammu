@@ -46,9 +46,9 @@ You must install the service provider:
 
 ### Setting up the Gammu service
 
-Make sure your Gammu has properly configured and able to send SMS by inserting data to `outbox` table.
+Make sure your Gammu has properly configured and able to send SMS by inserting data to `outbox` table or have [Gammu Api](https://github.com/kristiandrucker/gammuApi) installed on your Gammu box.
 
-Then change the database setting to point to Gammu's tables in `config/database.php` by adding this settings below.
+If you are not going to use [Gammu Api](https://github.com/kristiandrucker/gammuApi) change the database setting to point to Gammu's tables in `config/database.php` by adding this settings below.
 
 ```php
 // config/database.php
@@ -74,10 +74,23 @@ For sending, add this settings in `config/services.php`.
 ```php
 ...
 'gammu' => [
+    'method' => env('GAMMU_METHOD', 'db'),
     'sender' => env('GAMMU_SENDER', 'sender'),
 ],
 ...
 ``` 
+
+If you are going to use [Gammu Api](https://github.com/kristiandrucker/gammuApi) please add these settings in `config/services.php`
+
+``` php
+...
+'gammu' => [
+    'method' => env('GAMMU_METHOD', 'api'),
+    'auth' => env('GAMMU_AUTH', 'Your auth key from Gammu Api'),
+    'url' => env('GAMMU_URL', 'Url for Gammu api')
+],
+...
+```
 
 ## Usage
 
@@ -138,7 +151,7 @@ public function routeNotificationForGammu()
 
 * `to($phoneNumber)` : `(string)` Receiver phone number. Using international phone number (+62XXXXXXXXXX) format is highly suggested.
 * `content($content)` : `(string)` SMS content. If content length is more than 160 characters, it will be sent as long SMS automatically.
-* `sender($phneId)` : `(string)` Phone sender ID set in Gammu's phone table.
+* `sender($phneId)` : `(string)` Phone sender ID set in Gammu's phone table. You may not use it with Gammu Api.
 
 ## Changelog
 
