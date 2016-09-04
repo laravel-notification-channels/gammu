@@ -8,7 +8,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/laravel-notification-channels/gammu.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/gammu)
 [![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/gammu.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/gammu)
 
-This package makes it easy to send notifications using [Gammu SMSD](https://wammu.eu/smsd/) with Laravel 5.3.
+This package makes it easy to send SMS notifications using [Gammu SMSD](https://wammu.eu/smsd/) with Laravel 5.3.
 
 ## Contents
 
@@ -35,7 +35,7 @@ Make sure your Gammu SMSD has properly configured and able to send SMS. For more
 
 ### Gammu Api
 
-This is an optional if you don't want to use native Gammu SMSD method and use [Gammu Api](https://github.com/kristiandrucker/gammuApi). Make sure you configured it properly and able to send SMS using this API.
+This is optional if you want to use [Gammu Api](https://github.com/kristiandrucker/gammuApi). Make sure Gammu Api has properly configured and able to send SMS using this API.
 
 ## Installation
 
@@ -57,11 +57,11 @@ You must install the service provider:
 
 ### Setting Up Gammu Service
 
-There are two ways to send SMS using Gammu. First is using native Gammu SMSD method, by inserting data directly to Gammu SMSD database and the second one is using [Gammu Api](https://github.com/kristiandrucker/gammuApi).
+There are two methods to send SMS using Gammu. First method is using native Gammu SMSD method, by inserting data directly to Gammu SMSD database. The second method is using Gammu Api.
 
 #### Using Native Gammu SMSD Method
 
-Make sure your Gammu SMSD has properly configured and able to send SMS by inserting data to `outbox` table. The Gammu SMSD database can be installed in the same machine or in different machine.
+Make sure your Gammu SMSD or Gammu Api has properly configured and able to send SMS. The Gammu SMSD and  database can be installed in the same machine or in different machine.
 
 Add this settings in `config/services.php` to send SMS using native Gammu method.
 
@@ -73,6 +73,7 @@ Add this settings in `config/services.php` to send SMS using native Gammu method
 ],
 ...
 ``` 
+
 Set the database setting to point Gammu SMSD database in `config/database.php` by adding this settings below.
 
 ```php
@@ -98,11 +99,11 @@ Set the database setting to point Gammu SMSD database in `config/database.php` b
 ...
 ```
 
-The sender is the default sender name defined in `phones` table. If it's not set, it will automatically select the data from `phones` table. This setting is useful if you have multiple sender. If not, just leave it blank.
+The sender is the default sender name defined in `phones` table. If it's not set, it will automatically select the first data from `phones` table. This setting is useful if you have multiple sender.
 
 #### Using Gammu Api
 
-Make sure your [Gammu Api](https://github.com/kristiandrucker/gammuApi) has properly configured and able to send SMS via it's API. The [Gammu Api](https://github.com/kristiandrucker/gammuApi) can be installed in the same machine or in different machine.
+Make sure your Gammu Api has properly configured and able to send SMS via it's API. The Gammu Api can be installed in the same machine or in different machine.
 
 Add these settings in `config/services.php` to send SMS.
 
@@ -110,8 +111,8 @@ Add these settings in `config/services.php` to send SMS.
 ...
 'gammu' => [
     'method' => env('GAMMU_METHOD', 'api'),
-    'auth' => env('GAMMU_AUTH', 'Your auth key from Gammu Api'),
-    'url' => env('GAMMU_URL', 'Url for Gammu api')
+    'auth' => env('GAMMU_AUTH', 'Gammu Api token key'),
+    'url' => env('GAMMU_URL', 'URL of Gammu api')
 ],
 ...
 ```
@@ -125,7 +126,7 @@ use NotificationChannels\Gammu\GammuChannel;
 use NotificationChannels\Gammu\GammuMessage;
 use Illuminate\Notifications\Notification;
 
-class InvoicePaid extends Notification
+class SendNotificationToSms extends Notification
 {
     public function via($notifiable)
     {
@@ -141,7 +142,7 @@ class InvoicePaid extends Notification
 }
 ```
 
-If you have multiple senders, you can set the sender by passing `sender` method. If sender is not set, it will use one of sender from `phones` table.
+If you have multiple senders, you can set the sender by passing `sender` method. If sender is not set, it will use one of sender from `phones` table. This method is only available if you're using native Gammu SMSD method.
 
 ```php
 public function toGammu($notifiable)
