@@ -2,6 +2,6 @@
 
 All notable changes to `gammu` will be documented in this file.
 
-## 1.0.0 - 2016-08-20
+## 0.0.1 - 2016-09-02
 
-- Initial release
+- Pre-release

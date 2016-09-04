@@ -12,8 +12,11 @@ This package makes it easy to send notifications using [Gammu](https://wammu.eu/
 
 ## Contents
 
+- [Requirement](#requirement)
 - [Installation](#installation)
-	- [Setting up the Gammu service](#setting-up-the-Gammu-service)
+	- [Setting up the Gammu service](#setting-up-the-gammu-service)
+	    - [Using Native Gammu Method](#using-native-gammu-method)
+	    - [Using Gammu Api](#using-gammu-api)
 - [Usage](#usage)
     - [Routing a message](#routing-a-message)
 	- [Available Message methods](#available-message-methods)
@@ -24,6 +27,15 @@ This package makes it easy to send notifications using [Gammu](https://wammu.eu/
 - [Credits](#credits)
 - [License](#license)
 
+## Requirement
+
+### Gammu
+
+Make sure your Gammu has properly configured and able to send SMS. For more info to install and configure Gammu SMSD, read the [Gammu SMSD documentation](https://wammu.eu/smsd/).
+
+### Gammu Api
+
+This is an optional if you don't want to use native Gammu method and use [Gammu Api](https://github.com/kristiandrucker/gammuApi). Make sure you configured it properly and able to send SMS using this API.
 
 ## Installation
 
@@ -45,41 +57,54 @@ You must install the service provider:
 
 ### Setting up the Gammu service
 
-Make sure your Gammu has properly configured and able to send SMS by inserting data to `outbox` table or have [Gammu Api](https://github.com/kristiandrucker/gammuApi) installed on your Gammu box.
+There are two ways to send SMS using gammu. First is using native Gammu method, by inserting data directly to Gammu database and the second one is using [Gammu Api](https://github.com/kristiandrucker/gammuApi).
 
-If you are not going to use [Gammu Api](https://github.com/kristiandrucker/gammuApi) change the database setting to point to Gammu's tables in `config/database.php` by adding this settings below.
+#### Using Native Gammu Method
 
-```php
-// config/database.php
-...
-'gammu' => [
-    'driver' => 'mysql',
-    'host' => env('DB_GAMMU_HOST', 'localhost'),
-    'port' => env('DB_GAMMU_PORT', '3306'),
-    'database' => env('DB_GAMMU_DATABASE', 'forge'),
-    'username' => env('DB_GAMMU_USERNAME', 'forge'),
-    'password' => env('DB_GAMMU_PASSWORD', ''),
-    'charset' => 'utf8',
-    'collation' => 'utf8_unicode_ci',
-    'prefix' => '',
-    'strict' => true,
-    'engine' => null,
-],
-...
-```
+Make sure your Gammu has properly configured and able to send SMS by inserting data to `outbox` table. The Gammu database can be installed in the same machine or in different machine.
 
-For sending, add this settings in `config/services.php`.
+Add this settings in `config/services.php` to send SMS using native Gammu method.
 
 ```php
 ...
 'gammu' => [
     'method' => env('GAMMU_METHOD', 'db'),
-    'sender' => env('GAMMU_SENDER', 'sender'),
+    'sender' => env('GAMMU_SENDER', null),
 ],
 ...
 ``` 
+Set the database setting to point Gammu database in `config/database.php` by adding this settings below.
 
-If you are going to use [Gammu Api](https://github.com/kristiandrucker/gammuApi) please add these settings in `config/services.php`
+```php
+// config/database.php
+...
+'connections' => [
+    ...
+    'gammu' => [
+        'driver' => 'mysql',
+        'host' => env('DB_GAMMU_HOST', 'localhost'),
+        'port' => env('DB_GAMMU_PORT', '3306'),
+        'database' => env('DB_GAMMU_DATABASE', 'forge'),
+        'username' => env('DB_GAMMU_USERNAME', 'forge'),
+        'password' => env('DB_GAMMU_PASSWORD', ''),
+        'charset' => 'utf8',
+        'collation' => 'utf8_unicode_ci',
+        'prefix' => '',
+        'strict' => true,
+        'engine' => null,
+    ],
+    ...
+],
+...
+```
+
+The sender is the default sender name defined in `phones` table. If it's not set, it will automatically select the data from `phones` table. This setting is useful if you have multiple sender. If not, just leave it blank.
+
+#### Using Gammu Api
+
+Make sure your [Gammu Api](https://github.com/kristiandrucker/gammuApi) has properly configured and able to send SMS via it's API. The [Gammu Api](https://github.com/kristiandrucker/gammuApi) can be installed in the same machine or in different machine.
+
+Add these settings in `config/services.php` to send SMS.
 
 ``` php
 ...
@@ -110,8 +135,8 @@ class InvoicePaid extends Notification
     public function toGammu($notifiable)
     {
         return (new GammuMessage())
-            ->to($this->invoice->toPhoneNumber)
-            ->content("Your {$this->invoice->number} invoice has been paid!");
+            ->to($phoneNumber)
+            ->content($message);
     }
 }
 ```
@@ -122,9 +147,9 @@ If you have multiple senders, you can set the sender by passing `sender` method.
 public function toGammu($notifiable)
 {
     return (new GammuMessage())
-        ->to($this->invoice->toPhoneNumber)
-        ->sender($this->invoice->sendingUsingThisProvider)
-        ->content("Your {$this->invoice->number} invoice has been paid!");
+        ->to($phoneNumber)
+        ->sender($sender)
+        ->content($message);
 }
 ```
 
@@ -149,8 +174,8 @@ public function routeNotificationForGammu()
 ### Available methods
 
 * `to($phoneNumber)` : `(string)` Receiver phone number. Using international phone number (+62XXXXXXXXXX) format is highly suggested.
-* `content($content)` : `(string)` SMS content. If content length is more than 160 characters, it will be sent as long SMS automatically.
-* `sender($phneId)` : `(string)` Phone sender ID set in Gammu's phone table. You may not use it with Gammu Api.
+* `content($message)` : `(string)` The SMS content. If content length is more than 160 characters, it will be sent as [long SMS](https://en.wikipedia.org/wiki/Concatenated_SMS) automatically.
+* `sender($sender)` : `(string)` Phone sender ID set in Gammu `phones` table. This method is only available if you're using native Gammu method.
 
 ## Changelog
 
@@ -164,7 +189,7 @@ $ composer test
 
 ## Security
 
-If you discover any security related issues, please email halo@matriphe.com instead of using the issue tracker.
+If you discover any security related issues, please email halo@matriphe.com or kristian@rolmi.sk instead of using the issue tracker.
 
 ## Contributing
 
