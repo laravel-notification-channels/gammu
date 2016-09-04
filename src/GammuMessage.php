@@ -63,33 +63,7 @@ class GammuMessage
     {
         // Check if long SMS
         if (strlen($content) > 160) {
-            // Parse message to chunks
-            // @ref: http://www.nowsms.com/long-sms-text-messages-and-the-160-character-limit
-            $messages = str_split($content, 153);
-            $messages = collect($messages);
-            $messages_count = $messages->count();
-
-            // Get first message
-            $firstChunk = $messages->shift();
-
-            // Generate UDH
-            $ref = mt_rand(0, 255);
-            $i = 1;
-            $firstUDH = $this->generateUDH($messages_count, $i, $ref);
-
-            $this->payload['TextDecoded'] = $firstChunk;
-            $this->payload['UDH'] = $firstUDH;
-            $this->payload['MultiPart'] = 'true';
-
-            $i = 2;
-            foreach ($messages as $chunk) {
-                array_push($this->multiparts, [
-                    'UDH' => $this->generateUDH($messages_count, $i, $ref),
-                    'TextDecoded' => $chunk,
-                    'SequencePosition' => $i,
-                ]);
-                ++$i;
-            }
+            $this->parseLongMessage($content);
         } else {
             $this->payload['TextDecoded'] = $content;
         }
@@ -183,5 +157,38 @@ class GammuMessage
         ]);
 
         return strtoupper($udh);
+    }
+    
+    protected function parseLongMessage($content)
+    {
+        // Parse message to chunks
+        // @ref: http://www.nowsms.com/long-sms-text-messages-and-the-160-character-limit
+        $messages = str_split($content, 153);
+        $messages = collect($messages);
+        $messages_count = $messages->count();
+
+        // Get first message
+        $firstChunk = $messages->shift();
+
+        // Generate UDH
+        $ref = mt_rand(0, 255);
+        $i = 1;
+        $firstUDH = $this->generateUDH($messages_count, $i, $ref);
+        ++$i;
+
+        $this->payload['TextDecoded'] = $firstChunk;
+        $this->payload['UDH'] = $firstUDH;
+        $this->payload['MultiPart'] = 'true';
+
+        foreach ($messages as $chunk) {
+            array_push($this->multiparts, [
+                'UDH' => $this->generateUDH($messages_count, $i, $ref),
+                'TextDecoded' => $chunk,
+                'SequencePosition' => $i,
+            ]);
+            ++$i;
+        }
+        
+        return $this;
     }
 }

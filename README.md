@@ -136,7 +136,7 @@ class InvoicePaid extends Notification
     {
         return (new GammuMessage())
             ->to($phoneNumber)
-            ->content($message);
+            ->content($content);
     }
 }
 ```
@@ -149,7 +149,7 @@ public function toGammu($notifiable)
     return (new GammuMessage())
         ->to($phoneNumber)
         ->sender($sender)
-        ->content($message);
+        ->content($content);
 }
 ```
 
