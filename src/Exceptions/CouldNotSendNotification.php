@@ -23,7 +23,7 @@ class CouldNotSendNotification extends \Exception
     {
         return new static('Destination phone number was not provided.');
     }
-    
+
     /**
      * Thrown when there is content provided.
      *

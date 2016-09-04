@@ -5,9 +5,9 @@ namespace NotificationChannels\Gammu;
 class GammuMessage
 {
     public $destination;
-    
+
     public $content;
-    
+
     public $sender;
 
     /**
@@ -91,7 +91,7 @@ class GammuMessage
     {
         return empty($this->destination);
     }
-    
+
     /**
      * Determine if Content is not given.
      *

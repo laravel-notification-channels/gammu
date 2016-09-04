@@ -11,7 +11,6 @@ class GammuServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        
     }
 
     /**
@@ -19,6 +18,5 @@ class GammuServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        
     }
 }

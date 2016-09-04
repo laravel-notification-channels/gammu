@@ -3,28 +3,26 @@
 namespace NotificationChannels\Gammu\Drivers;
 
 use Illuminate\Contracts\Config\Repository;
-
 use NotificationChannels\Gammu\Models\Outbox;
 use NotificationChannels\Gammu\Models\OutboxMultipart;
 use NotificationChannels\Gammu\Models\Phone;
-
 use NotificationChannels\Gammu\Exceptions\CouldNotSendNotification;
 use Exception;
 
 class DbDriver extends DriverAbstract
 {
     protected $config;
-    
+
     protected $outbox;
-    
+
     protected $multipart;
-    
+
     protected $phone;
-    
+
     protected $data = [];
-    
+
     protected $chunks = [];
-    
+
     public function __construct(
         Repository $config, Outbox $outbox, OutboxMultipart $multipart, Phone $phone
     ) {
@@ -32,21 +30,21 @@ class DbDriver extends DriverAbstract
         $this->outbox = $outbox;
         $this->multipart = $multipart;
         $this->phone = $phone;
-        
+
         $this->data['CreatorID'] = $this->getSignature();
     }
-    
+
     public function send($phoneNumber, $content, $sender = null)
     {
         $this->setDestination($phoneNumber);
         $this->setContent($content);
         $this->setSender($sender);
-        
+
         // Check Destination
         $this->getDestination();
-        
+
         $outbox = $this->outbox->create($this->data);
-        
+
         if (! empty($this->chunks) && ! empty($outbox->ID)) {
             foreach ($this->chunks as $chunk) {
                 $chunk['ID'] = $outbox->ID;
@@ -54,107 +52,107 @@ class DbDriver extends DriverAbstract
             }
         }
     }
-    
+
     public function setDestination($phoneNumber)
     {
         if (empty($phoneNumber)) {
             throw CouldNotSendNotification::destinationNotProvided();
         }
-        
+
         $this->data['DestinationNumber'] = trim($phoneNumber);
-        
+
         return $this;
     }
-    
+
     public function getDestination()
     {
         if (empty($this->data['DestinationNumber'])) {
             throw CouldNotSendNotification::destinationNotProvided();
         }
-        
+
         return $this->data['DestinationNumber'];
     }
-    
+
     public function setContent($content)
     {
         if (empty($content)) {
             throw CouldNotSendNotification::contentNotProvided();
         }
-        
+
         if (strlen($content) > 160) {
             $this->parseLongMessage($content);
         } else {
             $this->data['TextDecoded'] = $content;
         }
-        
+
         return $this;
     }
-    
+
     public function getContent()
     {
         if (empty($this->data['TextDecoded'])) {
             throw CouldNotSendNotification::contentNotProvided();
         }
-        
+
         $content = array_merge([$this->data['TextDecoded']], $this->chunks);
-        
+
         return collect($content)->implode('');
     }
-    
+
     public function setSender($sender = null)
     {
         if (empty($sender)) {
-            $sender = $this->getDefaultSender(); 
+            $sender = $this->getDefaultSender();
         }
-        
+
         $senders = $this->getSendersArray();
-        
+
         if (! in_array($sender, $senders)) {
             throw CouldNotSendNotification::senderNotProvided();
         }
-        
+
         $this->data['SenderID'] = $sender;
-        
+
         return $this;
     }
-    
+
     public function getSender()
     {
         if (empty($this->data['SenderID'])) {
             throw CouldNotSendNotification::senderNotProvided();
         }
-        
+
         return $this->data['SenderID'];
     }
-    
+
     private function getDefaultSender()
     {
         $sender = $this->config->get('services.gammu.sender');
-        
+
         $senders = $this->getSendersArray();
-        
+
         if (in_array($sender, $senders)) {
             return $sender;
         }
-        
+
         try {
             return $this->phone->where('Send', 'yes')->firstOrFail()->ID;
         } catch (Exception $e) {
             throw CouldNotSendNotification::senderNotProvided();
         }
     }
-    
+
     private function getSendersArray()
     {
         $senders = $this->phone->where('Send', 'yes')->get()->pluck('ID')->toArray();
-        
+
         if (empty($senders)) {
             throw CouldNotSendNotification::senderNotProvided();
         }
-        
+
         return $senders;
     }
-    
+
     /**
      * Generate UDH part for long SMS.
      *
@@ -221,4 +219,4 @@ class DbDriver extends DriverAbstract
 
         return $this;
     }
-} 
+}
