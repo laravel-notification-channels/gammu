@@ -4,7 +4,7 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://travis-ci.org/laravel-notification-channels/gammu.svg?branch=master)](https://travis-ci.org/laravel-notification-channels/gammu)
 [![StyleCI](https://styleci.io/repos/67163908/shield)](https://styleci.io/repos/67163908)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/cb9970f9-6d96-4412-b4bb-d93a43daac40.svg?style=flat-square)](https://insight.sensiolabs.com/projects/fc5f6876-352b-439d-989f-9d72cf42b39f)
+[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/cb9970f9-6d96-4412-b4bb-d93a43daac40.svg?style=flat-square)](https://insight.sensiolabs.com/projects/cb9970f9-6d96-4412-b4bb-d93a43daac40)
 [![Quality Score](https://img.shields.io/scrutinizer/g/laravel-notification-channels/gammu.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/gammu)
 [![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/gammu.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/gammu)
 
