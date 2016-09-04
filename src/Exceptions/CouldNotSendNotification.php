@@ -23,6 +23,16 @@ class CouldNotSendNotification extends \Exception
     {
         return new static('Destination phone number was not provided.');
     }
+    
+    /**
+     * Thrown when there is content provided.
+     *
+     * @return static
+     */
+    public static function contentNotProvided()
+    {
+        return new static('Content was not provided.');
+    }
 
     /**
      * Thrown when there is no Gammu Api auth key provided.

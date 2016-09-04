@@ -4,17 +4,11 @@ namespace NotificationChannels\Gammu;
 
 class GammuMessage
 {
-    const VERSION = '0.0.1';
-
-    /**
-     * @var array Params payload.
-     */
-    public $payload = [];
-
-    /**
-     * @var array Multipart chunks.
-     */
-    public $multiparts = [];
+    public $destination;
+    
+    public $content;
+    
+    public $sender;
 
     /**
      * @param string $content
@@ -34,8 +28,6 @@ class GammuMessage
     public function __construct($content = '')
     {
         $this->content($content);
-        $this->payload['CreatorID'] = class_basename($this).'/'.self::VERSION;
-        $this->payload['MultiPart'] = 'false';
     }
 
     /**
@@ -47,7 +39,7 @@ class GammuMessage
      */
     public function to($phoneNumber)
     {
-        $this->payload['DestinationNumber'] = $phoneNumber;
+        $this->destination = $phoneNumber;
 
         return $this;
     }
@@ -61,12 +53,7 @@ class GammuMessage
      */
     public function content($content)
     {
-        // Check if long SMS
-        if (strlen($content) > 160) {
-            $this->parseLongMessage($content);
-        } else {
-            $this->payload['TextDecoded'] = $content;
-        }
+        $this->content = $content;
 
         return $this;
     }
@@ -80,7 +67,7 @@ class GammuMessage
      */
     public function sender($phoneId = null)
     {
-        $this->payload['SenderID'] = $phoneId;
+        $this->sender = $phoneId;
 
         return $this;
     }
@@ -92,7 +79,7 @@ class GammuMessage
      */
     public function senderNotGiven()
     {
-        return ! isset($this->payload['SenderID']);
+        return empty($this->sender);
     }
 
     /**
@@ -102,7 +89,17 @@ class GammuMessage
      */
     public function destinationNotGiven()
     {
-        return ! isset($this->payload['DestinationNumber']);
+        return empty($this->destination);
+    }
+    
+    /**
+     * Determine if Content is not given.
+     *
+     * @return bool
+     */
+    public function contentNotGiven()
+    {
+        return empty($this->content);
     }
 
     /**
@@ -112,83 +109,10 @@ class GammuMessage
      */
     public function toArray()
     {
-        return $this->payload;
-    }
-
-    /**
-     * Returns multipart chunks.
-     *
-     * @return array
-     */
-    public function getMultipartChunks()
-    {
-        return $this->multiparts;
-    }
-
-    /**
-     * Generate UDH part for long SMS.
-     *
-     * @link https://en.wikipedia.org/wiki/Concatenated_SMS#Sending_a_concatenated_SMS_using_a_User_Data_Header
-     *
-     * @return string
-     */
-    protected function generateUDH($total = 2, $sequence = 2, $ref = 0)
-    {
-        // Length of User Data Header, in this case 05
-        $octet_1 = '05';
-
-        // Information Element Identifier, equal to 00 (Concatenated short messages, 8-bit reference number)
-        $octet_2 = '00';
-
-        // Length of the header, excluding the first two fields; equal to 03
-        $octet_3 = '03';
-
-        // CSMS reference number, must be same for all the SMS parts in the CSMS
-        $octet_4 = str_pad(dechex($ref), 2, '0', STR_PAD_LEFT);
-
-        // Total number of parts
-        $octet_5 = str_pad(dechex($total), 2, '0', STR_PAD_LEFT);
-
-        // Part sequence
-        $octet_6 = str_pad(dechex($sequence), 2, '0', STR_PAD_LEFT);
-
-        $udh = implode('', [
-            $octet_1, $octet_2, $octet_3, $octet_4, $octet_5, $octet_6,
-        ]);
-
-        return strtoupper($udh);
-    }
-
-    protected function parseLongMessage($content)
-    {
-        // Parse message to chunks
-        // @ref: http://www.nowsms.com/long-sms-text-messages-and-the-160-character-limit
-        $messages = str_split($content, 153);
-        $messages = collect($messages);
-        $messages_count = $messages->count();
-
-        // Get first message
-        $firstChunk = $messages->shift();
-
-        // Generate UDH
-        $ref = mt_rand(0, 255);
-        $i = 1;
-        $firstUDH = $this->generateUDH($messages_count, $i, $ref);
-        ++$i;
-
-        $this->payload['TextDecoded'] = $firstChunk;
-        $this->payload['UDH'] = $firstUDH;
-        $this->payload['MultiPart'] = 'true';
-
-        foreach ($messages as $chunk) {
-            array_push($this->multiparts, [
-                'UDH' => $this->generateUDH($messages_count, $i, $ref),
-                'TextDecoded' => $chunk,
-                'SequencePosition' => $i,
-            ]);
-            ++$i;
-        }
-
-        return $this;
+        return [
+            'destination' => $this->destination,
+            'content' => $this->content,
+            'sender' => $this->sender,
+        ];
     }
 }
