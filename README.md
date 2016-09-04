@@ -8,13 +8,13 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/laravel-notification-channels/gammu.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/gammu)
 [![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/gammu.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/gammu)
 
-This package makes it easy to send notifications using [Gammu](https://wammu.eu/gammu/) with Laravel 5.3.
+This package makes it easy to send notifications using [Gammu SMSD](https://wammu.eu/smsd/) with Laravel 5.3.
 
 ## Contents
 
 - [Requirement](#requirement)
 - [Installation](#installation)
-	- [Setting up the Gammu service](#setting-up-the-gammu-service)
+	- [Setting up the Gammu service](#setting-up-the-gammu-smsd-service)
 	    - [Using Native Gammu Method](#using-native-gammu-method)
 	    - [Using Gammu Api](#using-gammu-api)
 - [Usage](#usage)
@@ -31,11 +31,11 @@ This package makes it easy to send notifications using [Gammu](https://wammu.eu/
 
 ### Gammu
 
-Make sure your Gammu has properly configured and able to send SMS. For more info to install and configure Gammu SMSD, read the [Gammu SMSD documentation](https://wammu.eu/smsd/).
+Make sure your Gammu SMSD has properly configured and able to send SMS. For more info to install and configure Gammu SMSD, read the [Gammu SMSD documentation](https://wammu.eu/smsd/).
 
 ### Gammu Api
 
-This is an optional if you don't want to use native Gammu method and use [Gammu Api](https://github.com/kristiandrucker/gammuApi). Make sure you configured it properly and able to send SMS using this API.
+This is an optional if you don't want to use native Gammu SMSD method and use [Gammu Api](https://github.com/kristiandrucker/gammuApi). Make sure you configured it properly and able to send SMS using this API.
 
 ## Installation
 
@@ -57,11 +57,11 @@ You must install the service provider:
 
 ### Setting up the Gammu service
 
-There are two ways to send SMS using gammu. First is using native Gammu method, by inserting data directly to Gammu database and the second one is using [Gammu Api](https://github.com/kristiandrucker/gammuApi).
+There are two ways to send SMS using Gammu. First is using native Gammu SMSD method, by inserting data directly to Gammu SMSD database and the second one is using [Gammu Api](https://github.com/kristiandrucker/gammuApi).
 
-#### Using Native Gammu Method
+#### Using Native Gammu SMSD Method
 
-Make sure your Gammu has properly configured and able to send SMS by inserting data to `outbox` table. The Gammu database can be installed in the same machine or in different machine.
+Make sure your Gammu SMSD has properly configured and able to send SMS by inserting data to `outbox` table. The Gammu SMSD database can be installed in the same machine or in different machine.
 
 Add this settings in `config/services.php` to send SMS using native Gammu method.
 
@@ -73,7 +73,7 @@ Add this settings in `config/services.php` to send SMS using native Gammu method
 ],
 ...
 ``` 
-Set the database setting to point Gammu database in `config/database.php` by adding this settings below.
+Set the database setting to point Gammu SMSD database in `config/database.php` by adding this settings below.
 
 ```php
 // config/database.php
