@@ -3,8 +3,8 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/laravel-notification-channels/gammu.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/gammu)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 [![Build Status](https://travis-ci.org/laravel-notification-channels/gammu.svg?branch=master)](https://travis-ci.org/laravel-notification-channels/gammu)
-[![StyleCI](https://styleci.io/repos/66142304/shield)](https://styleci.io/repos/66142304)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/fc5f6876-352b-439d-989f-9d72cf42b39f.svg?style=flat-square)](https://insight.sensiolabs.com/projects/fc5f6876-352b-439d-989f-9d72cf42b39f)
+[![StyleCI](https://styleci.io/repos/67163908/shield)](https://styleci.io/repos/67163908)
+[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/cb9970f9-6d96-4412-b4bb-d93a43daac40.svg?style=flat-square)](https://insight.sensiolabs.com/projects/cb9970f9-6d96-4412-b4bb-d93a43daac40)
 [![Quality Score](https://img.shields.io/scrutinizer/g/laravel-notification-channels/gammu.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/gammu)
 [![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/gammu.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/gammu)
 
@@ -14,12 +14,12 @@ This package makes it easy to send notifications using [Gammu SMSD](https://wamm
 
 - [Requirement](#requirement)
 - [Installation](#installation)
-	- [Setting up the Gammu service](#setting-up-the-gammu-smsd-service)
-	    - [Using Native Gammu Method](#using-native-gammu-method)
+	- [Setting Up Gammu Service](#setting-up-gammu-service)
+	    - [Using Native Gammu SMSD Method](#using-native-gammu-smsd-method)
 	    - [Using Gammu Api](#using-gammu-api)
 - [Usage](#usage)
     - [Routing a message](#routing-a-message)
-	- [Available Message methods](#available-message-methods)
+	- [Available Message methods](#available-methods)
 - [Changelog](#changelog)
 - [Testing](#testing)
 - [Security](#security)
@@ -55,7 +55,7 @@ You must install the service provider:
 ],
 ```
 
-### Setting up the Gammu service
+### Setting Up Gammu Service
 
 There are two ways to send SMS using Gammu. First is using native Gammu SMSD method, by inserting data directly to Gammu SMSD database and the second one is using [Gammu Api](https://github.com/kristiandrucker/gammuApi).
 

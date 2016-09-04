@@ -79,8 +79,8 @@ class GammuChannel
             'json' => [
                 'key' => config('services.gammu.auth'),
                 'to' => $param['DestinationNumber'],
-                'message' => $param['TextDecoded']
-            ]
+                'message' => $param['TextDecoded'],
+            ],
         ]);
     }
 
@@ -107,11 +107,11 @@ class GammuChannel
     {
         $method = config('services.gammu.method');
 
-        if(! $method) {
+        if (! $method) {
             throw CouldNotSendNotification::methodNotProvided();
         }
 
-        if($method != 'db' && $method != 'api') {
+        if ($method != 'db' && $method != 'api') {
             throw CouldNotSendNotification::invalidMethodProvided();
         }
 
@@ -125,11 +125,11 @@ class GammuChannel
             $payload->sender($sender);
         }
 
-        if(! config('services.gammu.url') && $method == 'api') {
+        if (! config('services.gammu.url') && $method == 'api') {
             throw CouldNotSendNotification::apiUrlNotProvided();
         }
 
-        if(! config('services.gammu.auth') && $method == 'api') {
+        if (! config('services.gammu.auth') && $method == 'api') {
             throw CouldNotSendNotification::authKeyNotProvided();
         }
 
