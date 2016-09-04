@@ -158,7 +158,7 @@ class GammuMessage
 
         return strtoupper($udh);
     }
-    
+
     protected function parseLongMessage($content)
     {
         // Parse message to chunks
@@ -188,7 +188,7 @@ class GammuMessage
             ]);
             ++$i;
         }
-        
+
         return $this;
     }
 }
