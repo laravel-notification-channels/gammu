@@ -14,12 +14,12 @@ This package makes it easy to send notifications using [Gammu SMSD](https://wamm
 
 - [Requirement](#requirement)
 - [Installation](#installation)
-	- [Setting up the Gammu service](#setting-up-the-gammu-smsd-service)
-	    - [Using Native Gammu Method](#using-native-gammu-method)
+	- [Setting Up Gammu Service](#setting-up-gammu-service)
+	    - [Using Native Gammu SMSD Method](#using-native-gammu-smsd-method)
 	    - [Using Gammu Api](#using-gammu-api)
 - [Usage](#usage)
     - [Routing a message](#routing-a-message)
-	- [Available Message methods](#available-message-methods)
+	- [Available Message methods](#available-methods)
 - [Changelog](#changelog)
 - [Testing](#testing)
 - [Security](#security)
@@ -55,7 +55,7 @@ You must install the service provider:
 ],
 ```
 
-### Setting up the Gammu service
+### Setting Up Gammu Service
 
 There are two ways to send SMS using Gammu. First is using native Gammu SMSD method, by inserting data directly to Gammu SMSD database and the second one is using [Gammu Api](https://github.com/kristiandrucker/gammuApi).
 
