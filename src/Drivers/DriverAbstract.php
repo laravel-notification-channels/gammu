@@ -34,7 +34,6 @@ abstract class DriverAbstract implements DriverInterface
 
     public function getDestination()
     {
-        return;
     }
 
     public function setContent($content)
@@ -48,6 +47,5 @@ abstract class DriverAbstract implements DriverInterface
 
     public function getContent()
     {
-        return;
     }
 }
