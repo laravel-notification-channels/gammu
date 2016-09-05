@@ -65,7 +65,7 @@ class ApiDriver extends DriverAbstract
 
     public function getDestination()
     {
-        if (empty($this->data['DestinationNumber'])) {
+        if (empty($this->destination)) {
             throw CouldNotSendNotification::destinationNotProvided();
         }
 
@@ -85,7 +85,7 @@ class ApiDriver extends DriverAbstract
 
     public function getContent()
     {
-        if (empty($this->data['TextDecoded'])) {
+        if (empty($this->content)) {
             throw CouldNotSendNotification::contentNotProvided();
         }
 

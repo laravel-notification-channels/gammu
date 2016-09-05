@@ -10,6 +10,10 @@ abstract class DriverAbstract implements DriverInterface
 
     const VERSION = '0.0.2';
 
+    public $destination;
+
+    public $content;
+
     public function send($phoneNumber, $content, $sender = null)
     {
     }
@@ -30,9 +34,7 @@ abstract class DriverAbstract implements DriverInterface
 
     public function getDestination()
     {
-        if (empty($this->data['DestinationNumber'])) {
-            throw CouldNotSendNotification::destinationNotProvided();
-        }
+        return;
     }
 
     public function setContent($content)
@@ -46,5 +48,6 @@ abstract class DriverAbstract implements DriverInterface
 
     public function getContent()
     {
+        return;
     }
 }
