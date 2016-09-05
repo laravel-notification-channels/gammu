@@ -2,6 +2,8 @@
 
 namespace NotificationChannels\Gammu\Drivers;
 
+use NotificationChannels\Gammu\Exceptions\CouldNotSendNotification;
+
 abstract class DriverAbstract implements DriverInterface
 {
     const PACKAGE = 'LNC-Gammu';

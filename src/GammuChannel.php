@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Config\Repository;
 use NotificationChannels\Gammu\Drivers\DbDriver;
 use NotificationChannels\Gammu\Drivers\ApiDriver;
+use NotificationChannels\Gammu\Exceptions\CouldNotSendNotification;
 
 class GammuChannel
 {
@@ -38,8 +39,6 @@ class GammuChannel
         $destination = $payload->destination;
         $content = $payload->content;
         $sender = $payload->sender;
-
-        $param = $payload->toArray();
 
         $this->getMethod();
 
