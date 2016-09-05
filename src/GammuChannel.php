@@ -40,8 +40,6 @@ class GammuChannel
         $content = $payload->content;
         $sender = $payload->sender;
 
-        $param = $payload->toArray();
-
         $this->getMethod();
 
         switch ($this->method) {
