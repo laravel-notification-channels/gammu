@@ -41,7 +41,7 @@ This is optional if you want to use [Gammu Api](https://github.com/kristiandruck
 
 You can install the package via composer:
 
-```bash
+```console
 composer require laravel-notification-channels/gammu
 ```
 
@@ -61,7 +61,7 @@ There are two methods to send SMS using Gammu. First method is using native Gamm
 
 #### Using Native Gammu SMSD Method
 
-Make sure your Gammu SMSD or Gammu Api has properly configured and able to send SMS. The Gammu SMSD and  database can be installed in the same machine or in different machine.
+Make sure your Gammu SMSD has properly configured and able to send SMS by inserting data to `outbox` table. The Gammu SMSD and  database can be installed in the same machine or in different machine.
 
 Add this settings in `config/services.php` to send SMS using native Gammu method.
 
