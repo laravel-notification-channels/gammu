@@ -112,7 +112,7 @@ Add these settings in `config/services.php` to send SMS.
 'gammu' => [
     'method' => env('GAMMU_METHOD', 'api'),
     'auth' => env('GAMMU_AUTH', 'gammu-api-key'),
-    'url' => env('GAMMU_URL', 'http://gammu.api/send/sms')
+    'url' => env('GAMMU_URL', 'http://gammu.api/')
 ],
 ...
 ```
