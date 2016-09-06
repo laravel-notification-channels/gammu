@@ -1,8 +1,8 @@
 <?php
+
 namespace NotificationChannels\Gammu\Test;
 
 use NotificationChannels\Gammu\GammuServiceProvider;
-
 use Orchestra\Testbench\TestCase;
 use Mockery;
 use Faker\Factory;
@@ -10,9 +10,9 @@ use Faker\Factory;
 abstract class TestBase extends TestCase
 {
     const MIGRATIONS_PATH = 'migrations';
-    
+
     protected $faker;
-    
+
     public function __construct()
     {
         $this->faker = Factory::create();
@@ -61,7 +61,7 @@ abstract class TestBase extends TestCase
     {
         return Mockery::mock($className);
     }
-    
+
     public function getMigrationsPath()
     {
         return realpath(__DIR__.DIRECTORY_SEPARATOR.self::MIGRATIONS_PATH);

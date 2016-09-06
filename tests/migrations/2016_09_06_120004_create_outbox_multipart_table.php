@@ -19,7 +19,7 @@ class CreateOutboxMultipartTable extends Migration
                     'Unicode_No_Compression',
                     '8bit',
                     'Default_Compression',
-                    'Unicode_Compression'
+                    'Unicode_Compression',
                 ])
                 ->default('Default_No_Compression');
             $table->string('UDH', 12);

@@ -14,7 +14,7 @@ class CreatePbkGroupsTable extends Migration
     {
         Schema::create('pbk_groups', function (Blueprint $table) {
             $table->increments('ID');
-            $table->string('Name');//->text('Name');
+            $table->string('Name'); //->text('Name');
         });
     }
 
