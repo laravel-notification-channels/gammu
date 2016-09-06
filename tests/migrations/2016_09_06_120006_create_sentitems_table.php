@@ -7,8 +7,6 @@ class CreateSentitemsTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -20,13 +18,13 @@ class CreateSentitemsTable extends Migration
             $table->timestamp('DeliveryDateTime')->index()->nullable();
             $table->enum('Status', [
                     'SendingOK',
-                    'SendingOKNoReport', 
-                    'SendingError', 
-                    'DeliveryOK', 
-                    'DeliveryFailed', 
-                    'DeliveryPending', 
-                    'DeliveryUnknown', 
-                    'Error'
+                    'SendingOKNoReport',
+                    'SendingError',
+                    'DeliveryOK',
+                    'DeliveryFailed',
+                    'DeliveryPending',
+                    'DeliveryUnknown',
+                    'Error',
                 ])
                 ->default('SendingOK');
             $table->integer('StatusError');
@@ -36,7 +34,7 @@ class CreateSentitemsTable extends Migration
                     'Unicode_No_Compression',
                     '8bit',
                     'Default_Compression',
-                    'Unicode_Compression'
+                    'Unicode_Compression',
                 ])
                 ->default('Default_No_Compression');
             $table->string('UDH', 12);
@@ -49,15 +47,13 @@ class CreateSentitemsTable extends Migration
             $table->integer('TPMR')->default(-1)->index();
             $table->integer('RelativeValidity')->default(-1);
             $table->string('CreatorID');
-                
+
             $table->primary(['ID', 'SequencePosition', 'TPMR']);
         });
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

@@ -7,8 +7,6 @@ class CreateOutboxTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -26,7 +24,7 @@ class CreateOutboxTable extends Migration
                     'Unicode_No_Compression',
                     '8bit',
                     'Default_Compression',
-                    'Unicode_Compression'
+                    'Unicode_Compression',
                 ])
                 ->default('Default_No_Compression');
             $table->string('UDH', 12)->nullable();
@@ -34,13 +32,13 @@ class CreateOutboxTable extends Migration
             $table->text('Text')->nullable();
             $table->text('TextDecoded');
             $table->enum('MultiPart', [
-                    'true', 'false'
+                    'true', 'false',
                 ])
                 ->default('false');
             $table->integer('RelativeValidity')->default(-1);
             $table->string('SenderID')->index();
             $table->enum('DeliveryReport', [
-                    'default', 'yes', 'no'
+                    'default', 'yes', 'no',
                 ])
                 ->default('default');
             $table->text('CreatorID');
@@ -51,8 +49,6 @@ class CreateOutboxTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

@@ -7,8 +7,6 @@ class CreateInboxTable extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
     public function up()
     {
@@ -22,7 +20,7 @@ class CreateInboxTable extends Migration
                     'Unicode_No_Compression',
                     '8bit',
                     'Default_Compression',
-                    'Unicode_Compression'
+                    'Unicode_Compression',
                 ])
                 ->default('Default_No_Compression');
             $table->string('UDH', 12);
@@ -32,7 +30,7 @@ class CreateInboxTable extends Migration
             $table->text('TextDecoded');
             $table->string('RecipientID');
             $table->enum('Processed', [
-                    'true', 'false'
+                    'true', 'false',
                 ])
                 ->default('false');
         });
@@ -40,8 +38,6 @@ class CreateInboxTable extends Migration
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
     public function down()
     {

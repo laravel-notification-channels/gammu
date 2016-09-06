@@ -1,8 +1,8 @@
 <?php
+
 namespace NotificationChannels\Gammu\Test;
 
 use NotificationChannels\Gammu\GammuServiceProvider;
-
 use Orchestra\Testbench\TestCase;
 use Mockery;
 use Faker\Factory;
@@ -10,9 +10,9 @@ use Faker\Factory;
 abstract class TestBase extends TestCase
 {
     const MIGRATIONS_PATH = 'migrations';
-    
+
     protected $faker;
-    
+
     public function __construct()
     {
         $this->faker = Factory::create();
@@ -30,17 +30,15 @@ abstract class TestBase extends TestCase
     /**
      * Define environment setup.
      *
-     * @param  \Illuminate\Foundation\Application  $app
-     *
-     * @return void
+     * @param \Illuminate\Foundation\Application $app
      */
     protected function getEnvironmentSetUp($app)
     {
         $app['path.base'] = __DIR__.'/..';
         $app['config']->set('database.connections.gammu', [
-            'driver'   => 'sqlite',
+            'driver' => 'sqlite',
             'database' => ':memory:',
-            'prefix'    => '',
+            'prefix' => '',
         ]);
     }
 
@@ -61,7 +59,7 @@ abstract class TestBase extends TestCase
     {
         return Mockery::mock($className);
     }
-    
+
     public function getMigrationsPath()
     {
         return realpath(__DIR__.DIRECTORY_SEPARATOR.self::MIGRATIONS_PATH);
