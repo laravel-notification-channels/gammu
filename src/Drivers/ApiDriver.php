@@ -25,6 +25,10 @@ class ApiDriver extends DriverAbstract
     public $destination;
 
     public $content;
+    
+    public $apiStatusCode;
+    
+    public $apiResponseBody;
 
     public function __construct(Repository $config, Client $client)
     {
@@ -34,13 +38,13 @@ class ApiDriver extends DriverAbstract
 
     public function send($phoneNumber, $content, $sender = null)
     {
-        $this->setUrl();
+        $this->getUrl();
         $this->setKey();
         $this->setUserAgent();
         $this->setDestination($phoneNumber);
         $this->setContent($content);
 
-        $this->client->post($this->url, [
+        $response = $this->client->post($this->url, [
             'json' => [
                 'key' => $this->key,
                 'to' => $this->destination,
@@ -50,6 +54,9 @@ class ApiDriver extends DriverAbstract
                 'user-agent' => $this->ua,
             ],
         ]);
+        
+        $this->apiStatusCode = $response->getStatusCode();
+        $this->apiResponseBody = $response->getBody()->getContents();
     }
 
     public function setDestination($phoneNumber)
@@ -92,13 +99,13 @@ class ApiDriver extends DriverAbstract
         return $this->content;
     }
 
-    public function setUrl()
+    public function setUrl($url)
     {
-        $this->url = $this->config->get('services.gammu.url');
-
-        if (empty($this->url)) {
-            throw CouldNotSendNotification::apiUrlNotProvided();
+        if (empty($url)) {
+            $this->url = $this->getDefaultUrl();
         }
+        
+        $this->url = $url;
 
         return $this;
     }
@@ -106,7 +113,7 @@ class ApiDriver extends DriverAbstract
     public function getUrl()
     {
         if (empty($this->url)) {
-            throw CouldNotSendNotification::apiUrlNotProvided();
+            return $this->getDefaultUrl();
         }
 
         return $this->url;
@@ -147,5 +154,18 @@ class ApiDriver extends DriverAbstract
         $this->ua = collect($userAgents)->implode(' ');
 
         return $this;
+    }
+    
+    private function getDefaultUrl()
+    {
+        $url = $this->config->get('services.gammu.url');
+        
+        if (empty($url)) {
+            throw CouldNotSendNotification::apiUrlNotProvided(); 
+        }
+        
+        $this->url = $url;
+        
+        return $this->url;
     }
 }

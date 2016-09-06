@@ -29,9 +29,9 @@ class CreateOutboxTable extends Migration
                     'Unicode_Compression'
                 ])
                 ->default('Default_No_Compression');
-            $table->string('UDH', 12);
+            $table->string('UDH', 12)->nullable();
             $table->integer('Class')->default(-1);
-            $table->text('Text');
+            $table->text('Text')->nullable();
             $table->text('TextDecoded');
             $table->enum('MultiPart', [
                     'true', 'false'
@@ -44,7 +44,7 @@ class CreateOutboxTable extends Migration
                 ])
                 ->default('default');
             $table->text('CreatorID');
-            $table->integer('Retries');
+            $table->integer('Retries')->default(1);
             $table->index(['SendingDateTime', 'SendingTimeOut']);
         });
     }

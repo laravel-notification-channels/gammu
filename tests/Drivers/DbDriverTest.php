@@ -8,6 +8,7 @@ use NotificationChannels\Gammu\Drivers\DbDriver;
 use NotificationChannels\Gammu\Exceptions\CouldNotSendNotification;
 
 use NotificationChannels\Gammu\Models\Phone;
+use NotificationChannels\Gammu\Models\Outbox;
 
 class DbDriverTest extends TestBase
 {
@@ -82,12 +83,7 @@ class DbDriverTest extends TestBase
     
     public function test_empty_sender_on_single_phone()
     {
-        $this->phone->create([
-            'ID' => 'telkomsel',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
+        $this->addPhone('telkomsel');
         
         $sender = $this->driver->getSender();
         
@@ -96,18 +92,8 @@ class DbDriverTest extends TestBase
     
     public function test_empty_sender_on_multiple_phones()
     {
-        $this->phone->create([
-            'ID' => 'indosat',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
-        $this->phone->create([
-            'ID' => 'telkomsel',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
+        $this->addPhone('indosat');
+        $this->addPhone('telkomsel');
         
         $sender = $this->driver->getSender();
         
@@ -116,12 +102,7 @@ class DbDriverTest extends TestBase
     
     public function test_set_unknown_sender_on_single_phone()
     {
-        $this->phone->create([
-            'ID' => 'xl',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
+        $this->addPhone('xl');
         
         $this->app->config->set('services.gammu.sender', 'indosat');
         
@@ -132,18 +113,8 @@ class DbDriverTest extends TestBase
     
     public function test_set_unknown_sender_on_multiple_phones()
     {
-        $this->phone->create([
-            'ID' => 'tri',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
-        $this->phone->create([
-            'ID' => 'xl',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
+        $this->addPhone('tri');
+        $this->addPhone('xl');
         
         $this->app->config->set('services.gammu.sender', 'telkomsel');
         
@@ -154,12 +125,7 @@ class DbDriverTest extends TestBase
     
     public function test_set_sender_on_single_phone()
     {
-        $this->phone->create([
-            'ID' => 'tri',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
+        $this->addPhone('tri');
         
         $this->app->config->set('services.gammu.sender', 'tri');
         
@@ -170,24 +136,9 @@ class DbDriverTest extends TestBase
     
     public function test_set_sender_on_multiple_phones()
     {
-        $this->phone->create([
-            'ID' => 'telkomsel',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
-        $this->phone->create([
-            'ID' => 'xl',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
-        $this->phone->create([
-            'ID' => 'indosat',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'yes',
-        ]);
+        $this->addPhone('telkomsel');
+        $this->addPhone('indosat');
+        $this->addPhone('xl');
         
         $this->app->config->set('services.gammu.sender', 'xl');
         
@@ -198,18 +149,8 @@ class DbDriverTest extends TestBase
     
     public function test_no_available_phones()
     {
-        $this->phone->create([
-            'ID' => 'telkomsel',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'no',
-        ]);
-        $this->phone->create([
-            'ID' => 'xl',
-            'IMEI' => $this->faker->numerify('#############'),
-            'Client' => $this->driver->getSignature(),
-            'Send' => 'no',
-        ]);
+        $this->addPhone('telkomsel', 'no');
+        $this->addPhone('indosat', 'no');
         
         $this->setExpectedException(CouldNotSendNotification::class);
         
@@ -275,5 +216,38 @@ class DbDriverTest extends TestBase
         $this->driver->setContent($content);
         
         $this->assertTrue($this->driver->isLongSms);
+    }
+    
+    public function test_send()
+    {
+        $phoneNumber = $this->faker->e164PhoneNumber;
+        $content = $this->faker->sentence;
+        $sender = 'telkomsel';
+        
+        $this->addPhone($sender);
+        
+        $this->driver->send($phoneNumber, $content, $sender);
+        
+        $this->assertEquals($phoneNumber, $this->driver->getDestination());
+        $this->assertEquals($content, $this->driver->getContent());
+        $this->assertEquals($sender, $this->driver->getSender());
+        
+        $outbox = $this->app->make(Outbox::class);
+        $sms = $outbox->get()->last();
+        
+        $this->assertEquals($phoneNumber, $sms->DestinationNumber);
+        $this->assertEquals($content, $sms->TextDecoded);
+        $this->assertEquals($sender, $sms->SenderID);
+        $this->assertEquals($this->driver->getSignature(), $sms->CreatorID);
+    }
+    
+    private function addPhone($sender, $send = 'yes')
+    {
+        $this->phone->create([
+            'ID' => $sender,
+            'IMEI' => $this->faker->numerify('#############'),
+            'Client' => $this->driver->getSignature(),
+            'Send' => $send,
+        ]);
     }
 }
