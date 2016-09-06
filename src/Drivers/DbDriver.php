@@ -22,6 +22,12 @@ class DbDriver extends DriverAbstract
     protected $data = [];
 
     protected $chunks = [];
+    
+    public $isLongSms = false;
+    
+    public $sender;
+    
+    private $minLongSmsChar = 160;
 
     public function __construct(
         Repository $config, Outbox $outbox, OutboxMultipart $multipart, Phone $phone
@@ -59,7 +65,7 @@ class DbDriver extends DriverAbstract
             throw CouldNotSendNotification::destinationNotProvided();
         }
 
-        $this->data['DestinationNumber'] = trim($phoneNumber);
+        $this->data['DestinationNumber'] = $this->destination = trim($phoneNumber);
 
         return $this;
     }
@@ -70,7 +76,7 @@ class DbDriver extends DriverAbstract
             throw CouldNotSendNotification::destinationNotProvided();
         }
 
-        return $this->data['DestinationNumber'];
+        return $this->destination;
     }
 
     public function setContent($content)
@@ -78,8 +84,10 @@ class DbDriver extends DriverAbstract
         if (empty($content)) {
             throw CouldNotSendNotification::contentNotProvided();
         }
+        
+        $this->content = $content;
 
-        if (strlen($content) > 160) {
+        if (strlen($content) > $this->minLongSmsChar) {
             $this->parseLongMessage($content);
         } else {
             $this->data['TextDecoded'] = $content;
@@ -90,13 +98,13 @@ class DbDriver extends DriverAbstract
 
     public function getContent()
     {
-        if (empty($this->data['TextDecoded'])) {
+        if (empty($this->content)) {
             throw CouldNotSendNotification::contentNotProvided();
         }
 
-        $content = array_merge([$this->data['TextDecoded']], $this->chunks);
+        $content = $this->content;
 
-        return collect($content)->implode('');
+        return $this->content;
     }
 
     public function setSender($sender = null)
@@ -108,21 +116,21 @@ class DbDriver extends DriverAbstract
         $senders = $this->getSendersArray();
 
         if (!in_array($sender, $senders)) {
-            throw CouldNotSendNotification::senderNotProvided();
+            return $this->getSender();
         }
 
-        $this->data['SenderID'] = $sender;
+        $this->data['SenderID'] = $this->sender = $sender;
 
         return $this;
     }
 
     public function getSender()
     {
-        if (empty($this->data['SenderID'])) {
-            throw CouldNotSendNotification::senderNotProvided();
+        if (empty($this->sender)) {
+            $this->sender = $this->getDefaultSender();
         }
 
-        return $this->data['SenderID'];
+        return $this->sender;
     }
 
     private function getDefaultSender()
@@ -132,7 +140,8 @@ class DbDriver extends DriverAbstract
         $senders = $this->getSendersArray();
 
         if (in_array($sender, $senders)) {
-            return $sender;
+            $this->sender = $sender;
+            return $this->sender;
         }
 
         try {
@@ -189,6 +198,10 @@ class DbDriver extends DriverAbstract
 
     protected function parseLongMessage($content)
     {
+        if (strlen($content) <= $this->minLongSmsChar) {
+            return $this;
+        }
+        
         // Parse message to chunks
         // @ref: http://www.nowsms.com/long-sms-text-messages-and-the-160-character-limit
         $messages = str_split($content, 153);
@@ -216,6 +229,8 @@ class DbDriver extends DriverAbstract
             ]);
             ++$i;
         }
+        
+        $this->isLongSms = true;
 
         return $this;
     }

@@ -6,7 +6,7 @@ class Phone extends ModelAbstract
 {
     protected $table = 'phones';
 
-    protected $guarded = ['*'];
+    protected $fillable = ['ID', 'IMEI', 'Client', 'Send', 'Receive'];
 
     public $incrementing = false;
 
