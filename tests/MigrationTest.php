@@ -15,7 +15,7 @@ class MigrationTest extends TestBase
     public function test_running_migration()
     {
         $migrations = DB::select('SELECT * FROM migrations');
-        
+
         $fi = new FilesystemIterator(
             $this->getMigrationsPath(), FilesystemIterator::SKIP_DOTS
         );

@@ -25,9 +25,9 @@ class ApiDriver extends DriverAbstract
     public $destination;
 
     public $content;
-    
+
     public $apiStatusCode;
-    
+
     public $apiResponseBody;
 
     public function __construct(Repository $config, Client $client)
@@ -54,7 +54,7 @@ class ApiDriver extends DriverAbstract
                 'user-agent' => $this->ua,
             ],
         ]);
-        
+
         $this->apiStatusCode = $response->getStatusCode();
         $this->apiResponseBody = $response->getBody()->getContents();
     }
@@ -104,7 +104,7 @@ class ApiDriver extends DriverAbstract
         if (empty($url)) {
             $this->url = $this->getDefaultUrl();
         }
-        
+
         $this->url = $url;
 
         return $this;
@@ -155,17 +155,17 @@ class ApiDriver extends DriverAbstract
 
         return $this;
     }
-    
+
     private function getDefaultUrl()
     {
         $url = $this->config->get('services.gammu.url');
-        
+
         if (empty($url)) {
-            throw CouldNotSendNotification::apiUrlNotProvided(); 
+            throw CouldNotSendNotification::apiUrlNotProvided();
         }
-        
+
         $this->url = $url;
-        
+
         return $this->url;
     }
 }

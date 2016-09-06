@@ -22,11 +22,11 @@ class DbDriver extends DriverAbstract
     protected $data = [];
 
     protected $chunks = [];
-    
+
     public $isLongSms = false;
-    
+
     public $sender;
-    
+
     private $minLongSmsChar = 160;
 
     public function __construct(
@@ -51,7 +51,7 @@ class DbDriver extends DriverAbstract
 
         $outbox = $this->outbox->create($this->data);
 
-        if (!empty($this->chunks) && !empty($outbox->ID)) {
+        if (! empty($this->chunks) && ! empty($outbox->ID)) {
             foreach ($this->chunks as $chunk) {
                 $chunk['ID'] = $outbox->ID;
                 $this->multipart->create($chunk);
@@ -84,7 +84,7 @@ class DbDriver extends DriverAbstract
         if (empty($content)) {
             throw CouldNotSendNotification::contentNotProvided();
         }
-        
+
         $this->content = $content;
 
         if (strlen($content) > $this->minLongSmsChar) {
@@ -115,7 +115,7 @@ class DbDriver extends DriverAbstract
 
         $senders = $this->getSendersArray();
 
-        if (!in_array($sender, $senders)) {
+        if (! in_array($sender, $senders)) {
             return $this->getSender();
         }
 
@@ -141,6 +141,7 @@ class DbDriver extends DriverAbstract
 
         if (in_array($sender, $senders)) {
             $this->sender = $sender;
+
             return $this->sender;
         }
 
@@ -201,7 +202,7 @@ class DbDriver extends DriverAbstract
         if (strlen($content) <= $this->minLongSmsChar) {
             return $this;
         }
-        
+
         // Parse message to chunks
         // @ref: http://www.nowsms.com/long-sms-text-messages-and-the-160-character-limit
         $messages = str_split($content, 153);
@@ -229,7 +230,7 @@ class DbDriver extends DriverAbstract
             ]);
             ++$i;
         }
-        
+
         $this->isLongSms = true;
 
         return $this;
