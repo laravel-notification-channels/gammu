@@ -51,7 +51,7 @@ class DbDriver extends DriverAbstract
 
         $outbox = $this->outbox->create($this->data);
 
-        if (!empty($this->chunks) && !empty($outbox->ID)) {
+        if (! empty($this->chunks) && ! empty($outbox->ID)) {
             foreach ($this->chunks as $chunk) {
                 $chunk['ID'] = $outbox->ID;
                 $this->multipart->create($chunk);
@@ -115,7 +115,7 @@ class DbDriver extends DriverAbstract
 
         $senders = $this->getSendersArray();
 
-        if (!in_array($sender, $senders)) {
+        if (! in_array($sender, $senders)) {
             return $this->getSender();
         }
 
