@@ -12,7 +12,7 @@ This package makes it easy to send SMS notifications using [Gammu SMSD](https://
 
 ## Contents
 
-- [Requirement](#requirement)
+- [Requirements](#requirements)
 - [Installation](#installation)
 	- [Setting Up Gammu Service](#setting-up-gammu-service)
 	    - [Using Native Gammu SMSD Method](#using-native-gammu-smsd-method)
@@ -27,7 +27,7 @@ This package makes it easy to send SMS notifications using [Gammu SMSD](https://
 - [Credits](#credits)
 - [License](#license)
 
-## Requirement
+## Requirements
 
 ### Gammu
 
@@ -36,6 +36,8 @@ Make sure your Gammu SMSD has properly configured and able to send SMS. For more
 ### Gammu Api
 
 This is optional if you want to use [Gammu Api](https://github.com/kristiandrucker/gammuApi). Make sure Gammu Api has properly configured and able to send SMS using this API.
+
+Under the hood, Gammu Api is using `gammu sendsms` command line.
 
 ## Installation
 
@@ -122,6 +124,8 @@ Add these settings in `config/services.php` to send SMS.
 You can now use the channel in your `via()` method inside the Notification class.
 
 ```php
+namespace App\Notifications;
+
 use NotificationChannels\Gammu\GammuChannel;
 use NotificationChannels\Gammu\GammuMessage;
 use Illuminate\Notifications\Notification;
