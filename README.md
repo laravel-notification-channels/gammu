@@ -12,7 +12,7 @@ This package makes it easy to send SMS notifications using [Gammu SMSD](https://
 
 ## Contents
 
-- [Requirement](#requirement)
+- [Requirements](#requirements)
 - [Installation](#installation)
 	- [Setting Up Gammu Service](#setting-up-gammu-service)
 	    - [Using Native Gammu SMSD Method](#using-native-gammu-smsd-method)
@@ -27,7 +27,7 @@ This package makes it easy to send SMS notifications using [Gammu SMSD](https://
 - [Credits](#credits)
 - [License](#license)
 
-## Requirement
+## Requirements
 
 ### Gammu
 
@@ -37,11 +37,13 @@ Make sure your Gammu SMSD has properly configured and able to send SMS. For more
 
 This is optional if you want to use [Gammu Api](https://github.com/kristiandrucker/gammuApi). Make sure Gammu Api has properly configured and able to send SMS using this API.
 
+Under the hood, Gammu Api is using `gammu sendsms` command line.
+
 ## Installation
 
 You can install the package via composer:
 
-```bash
+```console
 composer require laravel-notification-channels/gammu
 ```
 
@@ -61,7 +63,7 @@ There are two methods to send SMS using Gammu. First method is using native Gamm
 
 #### Using Native Gammu SMSD Method
 
-Make sure your Gammu SMSD or Gammu Api has properly configured and able to send SMS. The Gammu SMSD and  database can be installed in the same machine or in different machine.
+Make sure your Gammu SMSD has properly configured and able to send SMS by inserting data to `outbox` table. The Gammu SMSD and  database can be installed in the same machine or in different machine.
 
 Add this settings in `config/services.php` to send SMS using native Gammu method.
 
@@ -111,8 +113,8 @@ Add these settings in `config/services.php` to send SMS.
 ...
 'gammu' => [
     'method' => env('GAMMU_METHOD', 'api'),
-    'auth' => env('GAMMU_AUTH', 'Gammu Api token key'),
-    'url' => env('GAMMU_URL', 'URL of Gammu api')
+    'auth' => env('GAMMU_AUTH', 'gammu-api-key'),
+    'url' => env('GAMMU_URL', 'http://gammu.api/')
 ],
 ...
 ```
@@ -122,6 +124,8 @@ Add these settings in `config/services.php` to send SMS.
 You can now use the channel in your `via()` method inside the Notification class.
 
 ```php
+namespace App\Notifications;
+
 use NotificationChannels\Gammu\GammuChannel;
 use NotificationChannels\Gammu\GammuMessage;
 use Illuminate\Notifications\Notification;

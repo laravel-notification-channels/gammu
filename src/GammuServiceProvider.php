@@ -3,7 +3,6 @@
 namespace NotificationChannels\Gammu;
 
 use Illuminate\Support\ServiceProvider;
-use GuzzleHttp\Client as HttpClient;
 
 class GammuServiceProvider extends ServiceProvider
 {
@@ -12,10 +11,6 @@ class GammuServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->app->when(GammuChannel::class)
-            ->give(function () {
-                return new GammuChannel(new HttpClient);
-            });
     }
 
     /**
