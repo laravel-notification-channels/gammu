@@ -14,8 +14,8 @@ class CreatePbkTable extends Migration
             $table->increments('ID');
             $table->integer('GroupID')
                 ->default(-1);
-            $table->string('Name');//->text('Name');
-            $table->string('Number', 20);//->text('Number');
+            $table->string('Name'); //->text('Name');
+            $table->string('Number', 20); //->text('Number');
         });
     }
 
