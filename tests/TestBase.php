@@ -69,7 +69,7 @@ abstract class TestBase extends TestCase
 
     public function tearDown()
     {
-        parent::tearDown();
         Mockery::close();
+        parent::tearDown();
     }
 }
