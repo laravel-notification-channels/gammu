@@ -102,8 +102,6 @@ class DbDriver extends DriverAbstract
             throw CouldNotSendNotification::contentNotProvided();
         }
 
-        $content = $this->content;
-
         return $this->content;
     }
 
