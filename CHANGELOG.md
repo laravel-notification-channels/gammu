@@ -11,3 +11,7 @@ All notable changes to `gammu` will be documented in this file.
 - Refactor by splitting drivers
 - Add tests
 - Add signature
+
+## 0.0.3 - 2016-09-11
+- Add Callback function for api
+- Remove deadcode
