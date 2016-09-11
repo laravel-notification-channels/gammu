@@ -39,6 +39,7 @@ class GammuChannel
         $destination = $payload->destination;
         $content = $payload->content;
         $sender = $payload->sender;
+        $callback = $payload->callback;
 
         $this->getMethod();
 
@@ -47,7 +48,7 @@ class GammuChannel
                 $this->dbDriver->send($destination, $content, $sender);
                 break;
             case 'api':
-                $this->apiDriver->send($destination, $content, $sender);
+                $this->apiDriver->send($destination, $content, $sender, $callback);
                 break;
             default:
                 throw CouldNotSendNotification::invalidMethodProvided();

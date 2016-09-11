@@ -40,7 +40,7 @@ class DbDriver extends DriverAbstract
         $this->data['CreatorID'] = $this->getSignature();
     }
 
-    public function send($phoneNumber, $content, $sender = null)
+    public function send($phoneNumber, $content, $sender = null, $callback = null)
     {
         $this->setDestination($phoneNumber);
         $this->setContent($content);

@@ -8,6 +8,8 @@ use NotificationChannels\Gammu\Exceptions\CouldNotSendNotification;
 
 class ApiDriver extends DriverAbstract
 {
+    protected $callback;
+
     protected $config;
 
     protected $client;
@@ -36,9 +38,10 @@ class ApiDriver extends DriverAbstract
         $this->client = $client;
     }
 
-    public function send($phoneNumber, $content, $sender = null)
+    public function send($phoneNumber, $content, $sender = null, $callback = null)
     {
         $this->getUrl();
+        $this->setCallback($callback);
         $this->setKey();
         $this->setUserAgent();
         $this->setDestination($phoneNumber);
@@ -49,6 +52,7 @@ class ApiDriver extends DriverAbstract
                 'key' => $this->key,
                 'to' => $this->destination,
                 'message' => $this->content,
+                'callback' => $this->callback,
             ],
             'headers' => [
                 'user-agent' => $this->ua,
@@ -57,6 +61,13 @@ class ApiDriver extends DriverAbstract
 
         $this->apiStatusCode = $response->getStatusCode();
         $this->apiResponseBody = $response->getBody()->getContents();
+    }
+
+    public function setCallback($callback)
+    {
+        $this->callback = $callback;
+
+        return $this;
     }
 
     public function setDestination($phoneNumber)

@@ -10,6 +10,8 @@ class GammuMessage
 
     public $sender;
 
+    public $callback;
+
     /**
      * @param string $content
      *
@@ -54,6 +56,20 @@ class GammuMessage
     public function content($content)
     {
         $this->content = $content;
+
+        return $this;
+    }
+
+    /**
+     * Gammu Api Callback
+     *
+     * @param $content
+     *
+     * @return $this
+     */
+    public function callback($content)
+    {
+        $this->callback = $content;
 
         return $this;
     }
@@ -113,6 +129,7 @@ class GammuMessage
             'destination' => $this->destination,
             'content' => $this->content,
             'sender' => $this->sender,
+            'callback' => $this->callback,
         ];
     }
 }

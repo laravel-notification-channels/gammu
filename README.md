@@ -181,6 +181,7 @@ public function routeNotificationForGammu()
 * `to($phoneNumber)` : `(string)` Receiver phone number. Using international phone number (+62XXXXXXXXXX) format is highly suggested.
 * `content($message)` : `(string)` The SMS content. If content length is more than 160 characters, it will be sent as [long SMS](https://en.wikipedia.org/wiki/Concatenated_SMS) automatically.
 * `sender($sender)` : `(string)` Phone sender ID set in Gammu `phones` table. This method is only available if you're using native Gammu method.
+* `callback($callbackText)` : `(string)` Callback text for [Gammu Api](https://github.com/kristiandrucker/gammuApi) gives you function to pass text and when the Api will send your message it will be sent back to your callback url specified in your Gammu Api. Please setup callback properly on your Gammu Api.
 
 ## Changelog
 

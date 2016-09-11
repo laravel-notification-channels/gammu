@@ -14,7 +14,7 @@ abstract class DriverAbstract implements DriverInterface
 
     public $content;
 
-    public function send($phoneNumber, $content, $sender = null)
+    public function send($phoneNumber, $content, $sender = null, $callback = null)
     {
     }
 
