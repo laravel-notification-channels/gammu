@@ -4,14 +4,17 @@ namespace NotificationChannels\Gammu\Models;
 
 class Outbox extends ModelAbstract
 {
-    protected $connection = 'gammu';
-
     protected $table = 'outbox';
 
+    protected $primaryKey = 'ID';
+
     protected $fillable = [
-        'DestinationNumber', 'TextDecoded',
-        'SendingDateTime', 'Coding', 'UDH', 'MultiPart', 'SenderID',
-        'DeliveryReport', 'CreatorID',
+        'SenderNumber', 'UDH', 'SMSCNumber', 'TextDecoded', 'RecipientID',
+        'Processed',
+    ];
+
+    protected $dates = [
+        'SendingDateTime', 'SendingTimeOut',
     ];
 
     public $timestamps = true;

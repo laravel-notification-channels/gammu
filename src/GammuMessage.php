@@ -61,7 +61,7 @@ class GammuMessage
     }
 
     /**
-     * Gammu Api Callback
+     * Gammu Api Callback.
      *
      * @param $content
      *

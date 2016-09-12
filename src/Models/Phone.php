@@ -6,7 +6,11 @@ class Phone extends ModelAbstract
 {
     protected $table = 'phones';
 
-    protected $fillable = ['ID', 'IMEI', 'Client', 'Send', 'Receive'];
+    protected $primaryKey = 'IMEI';
+
+    protected $dates = [
+        'TimeOut',
+    ];
 
     public $incrementing = false;
 
