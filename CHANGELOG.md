@@ -2,7 +2,10 @@
 
 All notable changes to `gammu` will be documented in this file.
 
-## 0.0.4 - 2016-09-13
+## 0.0.5 - 2016-09-12
+- Fix version number
+
+## 0.0.4 - 2016-09-12
 - Fix model attributes
 
 ## 0.0.3 - 2016-09-11
