@@ -6,7 +6,11 @@ class OutboxMultipart extends ModelAbstract
 {
     protected $table = 'outbox_multipart';
 
-    protected $guarded = [];
+    protected $primaryKey = 'ID';
+
+    protected $fillable = [
+        'ID', 'SequencePosition', 'TextDecoded', 'UDH',
+    ];
 
     public $incrementing = false;
 
