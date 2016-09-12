@@ -10,11 +10,11 @@ class Outbox extends ModelAbstract
 
     protected $fillable = [
         'SenderID', 'CreatorID', 'DestinationNumber', 'TextDecoded', 'MultiPart',
-        'UDH', 'Retries', 
+        'UDH', 'Retries',
     ];
 
     protected $dates = [
-        'SendingDateTime', 'SendingTimeOut'
+        'SendingDateTime', 'SendingTimeOut',
     ];
 
     public $timestamps = true;
