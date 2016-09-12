@@ -2,49 +2,28 @@
 
 namespace NotificationChannels\Gammu;
 
-use NotificationChannels\Gammu\Exceptions\CouldNotSendNotification;
-use NotificationChannels\Gammu\Models\Outbox;
-use NotificationChannels\Gammu\Models\OutboxMultipart;
-use NotificationChannels\Gammu\Models\Phone;
 use Illuminate\Notifications\Notification;
-use GuzzleHttp\Client as HttpClient;
+use Illuminate\Contracts\Config\Repository;
+use NotificationChannels\Gammu\Drivers\DbDriver;
+use NotificationChannels\Gammu\Drivers\ApiDriver;
+use NotificationChannels\Gammu\Exceptions\CouldNotSendNotification;
 
 class GammuChannel
 {
-    /**
-     * @var HttpClient
-     */
-    protected $http;
+    protected $config;
 
-    /**
-     * @var Outbox
-     */
-    protected $outbox;
+    protected $dbDriver;
 
-    /**
-     * @var OutboxMultipart
-     */
-    protected $multipart;
+    protected $apiDriver;
 
-    /**
-     * @var Phone
-     */
-    protected $phone;
+    private $method;
 
-    /**
-     * Channel constructor.
-     *
-     * @param HttpClient $http
-     * @param Outbox $outbox
-     * @param OutboxMultipart $multipart
-     * @param Phone $phone
-     */
-    public function __construct(HttpClient $http, Outbox $outbox, OutboxMultipart $multipart, Phone $phone)
-    {
-        $this->http = $http;
-        $this->outbox = $outbox;
-        $this->multipart = $multipart;
-        $this->phone = $phone;
+    public function __construct(
+        Repository $config, DbDriver $dbDriver, ApiDriver $apiDriver
+    ) {
+        $this->config = $config;
+        $this->dbDriver = $dbDriver;
+        $this->apiDriver = $apiDriver;
     }
 
     /**
@@ -56,88 +35,34 @@ class GammuChannel
     public function send($notifiable, Notification $notification)
     {
         $payload = $notification->toGammu($notifiable);
-        $param = $payload->toArray();
-        $this->gammuExceptions($payload, $notifiable);
-        switch (config('services.gammu.method')) {
-            case 'api':
-                $this->gammuApi($param);
-                break;
+
+        $destination = $payload->destination;
+        $content = $payload->content;
+        $sender = $payload->sender;
+        $callback = $payload->callback;
+
+        $this->getMethod();
+
+        switch ($this->method) {
             case 'db':
-                $this->gammuDb($param, $payload);
+                $this->dbDriver->send($destination, $content, $sender);
                 break;
+            case 'api':
+                $this->apiDriver->send($destination, $content, $sender, $callback);
+                break;
+            default:
+                throw CouldNotSendNotification::invalidMethodProvided();
         }
     }
 
-    /**
-     * Send the given notification via Gammu Api.
-     *
-     * @param array $param
-     */
-    public function gammuApi(array $param)
+    private function getMethod()
     {
-        $this->http->post(config('services.gammu.url'), [
-            'json' => [
-                'key' => config('services.gammu.auth'),
-                'to' => $param['DestinationNumber'],
-                'message' => $param['TextDecoded'],
-            ],
-        ]);
-    }
+        $this->method = $this->config->get('services.gammu.method');
 
-    /**
-     * Send the given notification via Gammu DB.
-     *
-     * @param array $param
-     * @param GammuMessage $payload
-     */
-    public function gammuDb(array $param, GammuMessage $payload)
-    {
-        $outbox = $this->outbox->create($param);
-
-        $multiparts = $payload->getMultipartChunks();
-        if (! empty($multiparts) && ! empty($outbox->ID)) {
-            foreach ($multiparts as $chunk) {
-                $chunk['ID'] = $outbox->ID;
-                $this->multipart->create($chunk);
-            }
-        }
-    }
-
-    public function gammuExceptions(GammuMessage $payload, $notifiable)
-    {
-        $method = config('services.gammu.method');
-
-        if (! $method) {
+        if (empty($this->method)) {
             throw CouldNotSendNotification::methodNotProvided();
         }
 
-        if ($method != 'db' && $method != 'api') {
-            throw CouldNotSendNotification::invalidMethodProvided();
-        }
-
-        if ($payload->senderNotGiven() && $method == 'db') {
-            if (! $sender = config('services.gammu.sender')) {
-                if (! $sender = $this->phone->first()->ID) {
-                    throw CouldNotSendNotification::senderNotProvided();
-                }
-            }
-
-            $payload->sender($sender);
-        }
-
-        if (! config('services.gammu.url') && $method == 'api') {
-            throw CouldNotSendNotification::apiUrlNotProvided();
-        }
-
-        if (! config('services.gammu.auth') && $method == 'api') {
-            throw CouldNotSendNotification::authKeyNotProvided();
-        }
-
-        if ($payload->destinationNotGiven()) {
-            if (! $destination = $notifiable->routeNotificationFor('gammu')) {
-                throw CouldNotSendNotification::destinationNotProvided();
-            }
-            $payload->to($destination);
-        }
+        return $this;
     }
 }

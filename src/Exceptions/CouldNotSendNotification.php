@@ -25,6 +25,16 @@ class CouldNotSendNotification extends \Exception
     }
 
     /**
+     * Thrown when there is content provided.
+     *
+     * @return static
+     */
+    public static function contentNotProvided()
+    {
+        return new static('Content was not provided.');
+    }
+
+    /**
      * Thrown when there is no Gammu Api auth key provided.
      *
      * @return static
