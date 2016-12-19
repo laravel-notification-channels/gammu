@@ -33,7 +33,7 @@
     },
     "autoload": {
         "psr-4": {
-            "NotificationChannels\\Gammu\\": "src",
+            "NotificationChannels\\Gammu\\": "src"
         }
     },
     "autoload-dev": {
