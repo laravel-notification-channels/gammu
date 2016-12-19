@@ -4,6 +4,7 @@ namespace NotificationChannels\Gammu\Test;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Notifications\Notification;
+use NotificationChannels\Gammu\Drivers\RedisDriver;
 use NotificationChannels\Gammu\GammuChannel;
 use NotificationChannels\Gammu\GammuMessage;
 use NotificationChannels\Gammu\Drivers\DbDriver;
@@ -18,6 +19,8 @@ class GammuChannelTest extends TestBase
 
     protected $apiDriver;
 
+    protected $redisDriver;
+
     public function setUp()
     {
         parent::setUp();
@@ -25,9 +28,10 @@ class GammuChannelTest extends TestBase
         $this->phone = $this->app->make(Phone::class);
         $this->dbDriver = $this->mock(DbDriver::class);
         $this->apiDriver = $this->mock(ApiDriver::class);
+        $this->redisDriver = $this->mock(RedisDriver::class);
 
         $this->channel = new GammuChannel(
-            $this->app->config, $this->dbDriver, $this->apiDriver
+            $this->app->config, $this->dbDriver, $this->apiDriver, $this->redisDriver
         );
 
         $this->notification = new TestNotification();
