@@ -8,7 +8,7 @@ abstract class DriverAbstract implements DriverInterface
 {
     const PACKAGE = 'LNC-Gammu';
 
-    const VERSION = '0.0.7';
+    const VERSION = '0.0.8';
 
     public $destination;
 
