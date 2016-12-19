@@ -20,6 +20,7 @@
     "require": {
         "php": ">=5.6.4",
         "guzzlehttp/guzzle": "~6.0",
+        "predis/predis": "^1.1",
         "illuminate/database": "^5.1|^5.2|^5.3",
         "illuminate/notifications": "^5.3",
         "illuminate/support": "^5.1|^5.2|^5.3"
@@ -32,7 +33,7 @@
     },
     "autoload": {
         "psr-4": {
-            "NotificationChannels\\Gammu\\": "src"
+            "NotificationChannels\\Gammu\\": "src",
         }
     },
     "autoload-dev": {

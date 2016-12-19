@@ -12,6 +12,8 @@ class GammuMessage
 
     public $callback;
 
+    public $channel;
+
     /**
      * @param string $content
      *
@@ -70,6 +72,20 @@ class GammuMessage
     public function callback($content)
     {
         $this->callback = $content;
+
+        return $this;
+    }
+
+    /**
+     * Gammu Api Redis Channel.
+     *
+     * @param $channel
+     *
+     * @return $this
+     */
+    public function channel($channel)
+    {
+        $this->channel = $channel;
 
         return $this;
     }

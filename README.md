@@ -119,6 +119,18 @@ Add these settings in `config/services.php` to send SMS.
 ...
 ```
 
+### Using Gammu Api with Redis
+
+Make sure, that your Redis server is running and it's able to communicate with your application and gammu api. You are also able to specify ```->channel('name-channel')``` for using multiple Gammu Api's or have it on a non-default channel.
+
+``` php
+...
+'gammu' => [
+    'method' => env('GAMMU_METHOD', 'redis')
+],
+...
+```
+
 ## Usage
 
 You can now use the channel in your `via()` method inside the Notification class.
@@ -182,6 +194,7 @@ public function routeNotificationForGammu()
 * `content($message)` : `(string)` The SMS content. If content length is more than 160 characters, it will be sent as [long SMS](https://en.wikipedia.org/wiki/Concatenated_SMS) automatically.
 * `sender($sender)` : `(string)` Phone sender ID set in Gammu `phones` table. This method is only available if you're using native Gammu method.
 * `callback($callbackText)` : `(string)` Callback text for [Gammu Api](https://github.com/kristiandrucker/gammuApi) gives you function to pass text and when the Api will send your message it will be sent back to your callback url specified in your Gammu Api. Please setup callback properly on your Gammu Api.
+* `channel($redisChannelName)` : `(string)` Channel to publish to Redis. Default channel is `gammu-channel`.
 
 ## Changelog
 
