@@ -2,6 +2,9 @@
 
 All notable changes to `gammu` will be documented in this file.
 
+## 0.0.7 - 2016-12-20
+- Fix composer issues
+
 ## 0.0.6 - 2016-12-19
 - Add support for sending sms with gammu api via redis
 
