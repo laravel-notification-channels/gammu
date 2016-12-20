@@ -2,6 +2,9 @@
 
 All notable changes to `gammu` will be documented in this file.
 
+## 0.0.8 - 2016-12-20
+- Add tests for Redis Driver
+
 ## 0.0.7 - 2016-12-20
 - Fix composer issues
 
