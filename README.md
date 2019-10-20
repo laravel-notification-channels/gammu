@@ -8,7 +8,11 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/laravel-notification-channels/gammu.svg?style=flat-square)](https://scrutinizer-ci.com/g/laravel-notification-channels/gammu)
 [![Total Downloads](https://img.shields.io/packagist/dt/laravel-notification-channels/gammu.svg?style=flat-square)](https://packagist.org/packages/laravel-notification-channels/gammu)
 
-This package makes it easy to send SMS notifications using [Gammu SMSD](https://wammu.eu/smsd/) with Laravel 5.3.
+~This package makes it easy to send SMS notifications using [Gammu SMSD](https://wammu.eu/smsd/) with Laravel 5.3.~
+
+# Channel Deprecated
+Please see [this issue](https://github.com/laravel-notification-channels/channels/issues/67) for more infomation.  
+This channel was deprecated in Oct 2019 due to lack of a maintainer.
 
 ## Contents
 
