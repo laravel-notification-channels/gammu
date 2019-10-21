@@ -14,6 +14,8 @@
 Please see [this issue](https://github.com/laravel-notification-channels/channels/issues/67) for more infomation.  
 This channel was deprecated in Oct 2019 due to lack of a maintainer.
 
+If you'd like to take over maintaince, feel free to open an PR to bring the package up to date & we can transfer the package.
+
 ## Contents
 
 - [Requirements](#requirements)
